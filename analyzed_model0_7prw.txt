@@ -1,0 +1,173 @@
+#coloring
+color skyblue, chain A
+color orange, chain B
+color purple, elem Zn
+color pink, chain F
+color green, chain C
+color green, chain D
+
+
+#RMSD for all atoms
+cmd.align("polymer and name CA and (fold_7prw_with_zinc_cut_model_0)","polymer and name CA and (7prw)",quiet=0,object="aln_fold_7prw_with_zinc_cut_model_0_to_7prw",reset=1)
+
+#RMSD for carbon backbone
+cmd.align("polymer and name N+C+CA+O and (fold_7prw_with_zinc_cut_model_0)","polymer and name N+C+CA+O and (7prw)",quiet=0,object="aln_fold_7prw_with_zinc_cut_model_0_to_fold_7prw",reset=1)
+
+#RMSD Cα RMSD
+cmd.align("polymer and name CA and (fold_7prw_with_zinc_cut_model_0)","polymer and name CA and (7prw)",quiet=0,object="aln_fold_7prw_with_zinc_cut_model_0_to_fold_7prw",reset=1)
+
+# Domain-specific comparisons (DBD vs LBD):
+
+# Align the full structures first
+align fold_7prw_with_zinc_cut_model_0, 7prw
+#PRW
+# Define Domain Residue Ranges (Modify if Needed)
+# GRa DBD1
+create gra_dbd1_target, 7prw and chain A and resi 421-441
+create gra_dbd1_model, fold_7prw_with_zinc_cut_model_0 and chain A and resi 7-27
+
+# GRa DBD2
+create gra_dbd2_target, 7prw and chain A and resi 457-476
+create gra_dbd2_model, fold_7prw_with_zinc_cut_model_0 and chain A and resi 43-62
+
+# GRa LBD
+create gra_lbd_target, 7prw and chain A and resi 524-758
+create gra_lbd_model, fold_7prw_with_zinc_cut_model_0 and chain A and resi 75-307
+
+# GRb DBD1
+create grb_dbd1_target, 7prw and chain B and resi 421-441
+create grb_dbd1_model, fold_7prw_with_zinc_cut_model_0 and chain B and resi 4-24
+
+# GRb DBD2
+create grb_dbd2_target, 7prw and chain B and resi 457-476
+create grb_dbd2_model, fold_7prw_with_zinc_cut_model_0 and chain B and resi 40-59
+
+# GRb LBD
+create grb_lbd_target, 7prw and chain B and resi 524-758
+create grb_lbd_model, fold_7prw_with_zinc_cut_model_0 and chain B and resi 72-304
+
+
+# RMSD Calculations
+print("\n=== RMSD Analysis for DBD and LBD of GR homodimers ===\n")
+
+# GRa DBD1 RMSD
+rmsd_gra_dbd1 = cmd.align("gra_dbd1_model", "gra_dbd1_target")
+print(f"GR/A DBD1 RMSD: {rmsd_gra_dbd1[0]:.3f} A")
+
+# GRa DBD2 RMSD
+rmsd_gra_dbd2 = cmd.align("gra_dbd2_model", "gra_dbd2_target")
+print(f"GR/A DBD2 RMSD: {rmsd_gra_dbd2[0]:.3f} A")
+
+# GRa LBD RMSD
+rmsd_gra_lbd = cmd.align("gra_lbd_model", "gra_lbd_target")
+print(f"GR/A LBD RMSD: {rmsd_gra_lbd[0]:.3f} A")
+
+# GRb DBD1 RMSD
+rmsd_grb_dbd1 = cmd.align("grb_dbd1_model", "grb_dbd1_target")
+print(f"GR/B DBD1 RMSD: {rmsd_grb_dbd1[0]:.3f} A")
+
+# GRb DBD2 RMSD
+rmsd_grb_dbd2 = cmd.align("grb_dbd2_model", "grb_dbd2_target")
+print(f"GR/B DBD2 RMSD: {rmsd_grb_dbd2[0]:.3f} A")
+
+# GRb LBD RMSD
+rmsd_grb_lbd = cmd.align("grb_lbd_model", "grb_lbd_target")
+print(f"GR/B LBD RMSD: {rmsd_grb_lbd[0]:.3f} A")
+
+print("\n=== RMSD Analysis Completed Successfully! ===")
+
+#Secondary Structure Analysis: 
+#α-helical, β-sheet content, Loop regions 
+cmd.dss()  # Assign secondary structures
+
+alpha_residues = cmd.count_atoms("ss H and name CA")
+beta_residues = cmd.count_atoms("ss S and name CA")
+cmd.select("loop_residues", "name CA and (not ss H) and (not ss S)")
+loop_residues = cmd.count_atoms("loop_residues")  # Select residues
+
+total_residues = cmd.count_atoms("name CA")  # Make sure all residues are counted
+
+alpha_fraction = (alpha_residues / total_residues) * 100
+beta_fraction = (beta_residues / total_residues) * 100
+loop_fraction = (loop_residues / total_residues) * 100  # Now correctly calculated
+
+print(f"Alpha-helical content: {alpha_fraction:.2f}%")
+print(f"Beta-sheet content: {beta_fraction:.2f}%")
+print(f"Loop/coil content: {loop_fraction:.2f}%")
+print(f"Total: {alpha_fraction + beta_fraction + loop_fraction:.2f}%")  # Should be ~100%
+
+
+
+#Domain-specific SSE distribution 
+# Recalculate secondary structure assignments
+cmd.dss()
+
+# GRa DBD1 (First DNA-binding domain)
+cmd.select("gra_dbd1", "chain A and resi 421-441")
+gra_dbd1_alpha = cmd.count_atoms("gra_dbd1 and ss H and name CA")
+gra_dbd1_beta = cmd.count_atoms("gra_dbd1 and ss S and name CA")
+gra_dbd1_loop = cmd.count_atoms("gra_dbd1 and (not ss H) and (not ss S) and name CA")
+gra_dbd1_total = cmd.count_atoms("gra_dbd1 and name CA")
+
+print(f"GRa DBD1 Alpha: {gra_dbd1_alpha/gra_dbd1_total*100:.2f}%")
+print(f"GRa DBD1 Beta: {gra_dbd1_beta/gra_dbd1_total*100:.2f}%")
+print(f"GRa DBD1 Loop: {gra_dbd1_loop/gra_dbd1_total*100:.2f}%")
+
+# GRa DBD2 (Second DNA-binding domain)
+cmd.select("gra_dbd2", "chain A and resi 457-476")
+gra_dbd2_alpha = cmd.count_atoms("gra_dbd2 and ss H and name CA")
+gra_dbd2_beta = cmd.count_atoms("gra_dbd2 and ss S and name CA")
+gra_dbd2_loop = cmd.count_atoms("gra_dbd2 and (not ss H) and (not ss S) and name CA")
+gra_dbd2_total = cmd.count_atoms("gra_dbd2 and name CA")
+
+print(f"GRa DBD2 Alpha: {gra_dbd2_alpha/gra_dbd2_total*100:.2f}%")
+print(f"GRa DBD2 Beta: {gra_dbd2_beta/gra_dbd2_total*100:.2f}%")
+print(f"GRa DBD2 Loop: {gra_dbd2_loop/gra_dbd2_total*100:.2f}%")
+
+# GRa LBD (Ligand-binding domain)
+cmd.select("gra_lbd", "chain A and resi 524-758")
+gra_lbd_alpha = cmd.count_atoms("gra_lbd and ss H and name CA")
+gra_lbd_beta = cmd.count_atoms("gra_lbd and ss S and name CA")
+gra_lbd_loop = cmd.count_atoms("gra_lbd and (not ss H) and (not ss S) and name CA")
+gra_lbd_total = cmd.count_atoms("gra_lbd and name CA")
+
+print(f"GRa LBD Alpha: {gra_lbd_alpha/gra_lbd_total*100:.2f}%")
+print(f"GRa LBD Beta: {gra_lbd_beta/gra_lbd_total*100:.2f}%")
+print(f"GRa LBD Loop: {gra_lbd_loop/gra_lbd_total*100:.2f}%")
+
+
+# Recalculate secondary structure assignments
+cmd.dss()
+
+# GRb DBD1 (First DNA-binding domain)
+cmd.select("grb_dbd1", "chain B and resi 421-441")
+grb_dbd1_alpha = cmd.count_atoms("grb_dbd1 and ss H and name CA")
+grb_dbd1_beta = cmd.count_atoms("grb_dbd1 and ss S and name CA")
+grb_dbd1_loop = cmd.count_atoms("grb_dbd1 and (not ss H) and (not ss S) and name CA")
+grb_dbd1_total = cmd.count_atoms("grb_dbd1 and name CA")
+
+print(f"GRb DBD1 Alpha: {grb_dbd1_alpha/grb_dbd1_total*100:.2f}%")
+print(f"GRb DBD1 Beta: {grb_dbd1_beta/grb_dbd1_total*100:.2f}%")
+print(f"GRb DBD1 Loop: {grb_dbd1_loop/grb_dbd1_total*100:.2f}%")
+
+# GRb DBD2 (Second DNA-binding domain)
+cmd.select("grb_dbd2", "chain B and resi 457-476")
+grb_dbd2_alpha = cmd.count_atoms("grb_dbd2 and ss H and name CA")
+grb_dbd2_beta = cmd.count_atoms("grb_dbd2 and ss S and name CA")
+grb_dbd2_loop = cmd.count_atoms("grb_dbd2 and (not ss H) and (not ss S) and name CA")
+grb_dbd2_total = cmd.count_atoms("grb_dbd2 and name CA")
+
+print(f"GRb DBD2 Alpha: {grb_dbd2_alpha/grb_dbd2_total*100:.2f}%")
+print(f"GRb DBD2 Beta: {grb_dbd2_beta/grb_dbd2_total*100:.2f}%")
+print(f"GRb DBD2 Loop: {grb_dbd2_loop/grb_dbd2_total*100:.2f}%")
+
+# GRb LBD (Ligand-binding domain)
+cmd.select("grb_lbd", "chain B and resi 524-758")
+grb_lbd_alpha = cmd.count_atoms("grb_lbd and ss H and name CA")
+grb_lbd_beta = cmd.count_atoms("grb_lbd and ss S and name CA")
+grb_lbd_loop = cmd.count_atoms("grb_lbd and (not ss H) and (not ss S) and name CA")
+grb_lbd_total = cmd.count_atoms("grb_lbd and name CA")
+
+print(f"GRb LBD Alpha: {grb_lbd_alpha/grb_lbd_total*100:.2f}%")
+print(f"GRb LBD Beta: {grb_lbd_beta/grb_lbd_total*100:.2f}%")
+print(f"GRb LBD Loop: {grb_lbd_loop/grb_lbd_total*100:.2f}%")
