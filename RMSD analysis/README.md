@@ -1,0 +1,2 @@
+# This is the RMSD analysis folder.
+Upload the .pse (your experimental PyMOL session) and .txt (your script) files here in the folder for your nuclear receptor and its rcsb code.
