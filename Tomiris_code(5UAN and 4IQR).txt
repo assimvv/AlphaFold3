@@ -1,0 +1,105 @@
+﻿#RMSD for All-atoms
+cmd.align("4IQR", "Model0", quiet=0, object="aln_4IQR_to_Model0", reset=1)
+
+
+#RMSD for Backbone
+cmd.align("polymer and name N+C+CA+O and (4IQR)","polymer and name N+C+CA+O and (Model0)",quiet=0,object="aln_4IQR_to_Model0",reset=1)
+
+
+#RMSD for Ca
+cmd.align("polymer and name CA and (4IQR)","polymer and name CA and (fold_4IQR_Model0)",quiet=0,object="aln_4IQR_to_fold_4IQR_Model0",reset=1)
+
+
+#Secondary Structure Analysis: α-helix content
+ss = [ i.ss for i in cmd.get_model ("n. CA").atom ] 
+print "Helix content: %5.2f%%" % (100.0*ss.count("H")/len(ss))
+
+
+#Secondary Structure Analysis: β-sheet content
+ss = [ i.ss for i in cmd.get_model ("n. CA").atom ]
+print "Sheet content: %5.2f%%" % (100.0*ss.count("S")/len(ss))
+
+
+#Secondary Structure Analysis: Loop region content (For PDB)
+ss = [ i.ss for i in cmd.get_model ("n. CA").atom ]
+print "Loop content: %5.2f%%" % (100.0*ss.count("")/len(ss))
+
+
+#Secondary Structure Analysis: Loop region content (For AF3 predicted)
+ss = [ i.ss for i in cmd.get_model ("n. CA").atom ]
+print "Loop content: %5.2f%%" % (100.0*ss.count("L")/len(ss))
+
+
+#Domain Architecture Analysis: Distance between DBD and LBD (εDBD, LBD) (Chain A)
+pseudoatom DBD_A_ori, selection=4IQR and resi 49-124 and chain A
+show spheres, DBD_A_ori
+set sphere_scale, 0.2, DBD_A_ori
+
+
+pseudoatom LBD_A_ori, selection=4IQR and resi 143-368 and chain A
+show spheres, LBD_A_ori
+set sphere_scale, 0.2, LBD_A_ori
+
+
+distance Dist_DBD_LBD_A_ori, DBD_A_ori, LBD_A_ori
+
+
+#Domain Architecture Analysis: Distance between DBD and LBD (εDBD, LBD) (Chain B)
+pseudoatom DBD_B_ori, selection=4IQR and resi 49-153 and chain B
+show spheres, DBD_B_ori
+set sphere_scale, 0.2, DBD_B_ori
+
+
+pseudoatom LBD_B_ori, selection=4IQR and resi 166-368 and chain B
+show spheres, LBD_B_ori
+set sphere_scale, 0.2, LBD_B_ori
+
+
+distance Dist_DBD_LBD_B_ori, DBD_B_ori, LBD_B_ori
+
+
+#Domain Architecture Analysis: Distance between DBD and LBD (εDBD, LBD) (Chain E)
+pseudoatom DBD_E_ori, selection=4IQR and resi 49-123 and chain E
+show spheres, DBD_E_ori
+set sphere_scale, 0.2, DBD_E_ori
+
+
+pseudoatom LBD_E_ori, selection=4IQR and resi 141-368 and chain E
+show spheres, LBD_E_ori
+set sphere_scale, 0.2, LBD_E_ori
+
+
+distance Dist_DBD_LBD_E_ori, DBD_E_ori, LBD_E_ori
+
+
+#Domain Architecture Analysis: Distance between DBD and LBD (εDBD, LBD) (Chain F)
+pseudoatom DBD_F_ori, selection=4IQR and resi 49-154 and chain F
+show spheres, DBD_F_ori
+set sphere_scale, 0.2, DBD_F_ori
+
+
+pseudoatom LBD_F_ori, selection=4IQR and resi 161-368 and chain F
+show spheres, LBD_F_ori
+set sphere_scale, 0.2, LBD_F_ori
+
+
+distance Dist_DBD_LBD_F_ori, DBD_F_ori, LBD_F_ori
+
+
+#Domain Architecture Analysis: Angles between domains (θDBD, LBD) 
+#Found central pseudoatom between last atom of DBD (initial point of angle) and first atom of LDB (last point of angle) -> central pseudoatom (central point of angle). 
+
+
+pseudoatom Hinge_A_ori, selection=4IQR and resi 124-143 and chain A
+show spheres, Hinge_A_ori
+set sphere_scale, 0.05, Hinge_A_ori
+#Angle was then done manually through wizard tool 
+#1st atom - DBD pseudoatom, 2nd atom - Hinge atom, 3rd atom - LBD pseudoatom
+
+
+#Domain Architecture Analysis: Dihedral angles (DHDBD, LBD)
+#was done manually through wizard tool 
+#1st atom - DBD pseudoatom, 2nd atom - last atom of DBD, 3rd atom - first atom of LBD, 4th atom - LBD pseudoatom
+
+
+#Ligand binding pocket analysis
