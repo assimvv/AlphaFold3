@@ -1,0 +1,340 @@
+﻿UNIPROT separate LBD and DBD sequences
+DBD Domains (418 - 488 for chains A and B)
+Zinc finger     421-441   NR C4-type DBD
+Sequence: CLVCSDEASGCHYGVLTCGSC
+Zinc finger     457-476    NR C4-type
+Sequence: CAGRNDCIIDKIRRKNCPAC
+LBD Domain 524-758 NR LBD (528-758 for chain A and B)
+Sequence: TLPQLTPTLVSLLEVIEPEVLYAGYDSSVPDSTWRIMTTLNMLGGRQVIAAVKWAKAIPGFRNLHLDDQMTLLQYSWMFLMAFALGWRSYRQSSANLLCFAPDLIINEQRMTLPCMYDQCKHMLYVSSELHRLQVSYEEYLCMKTLLLLSSVPKDGLKSQELFDEIRMTYIKELGKAIVKREGNSSQNWQRFYQLTKLLDSMHEVVENLLNYCFQTFLDKTMSIEFPEMLAEIIT
+Full sequence
+MDSKESLTPGREENPSSVLAQERGDVMDFYKTLRGGATVKVSASSPSLAVASQSDSKQRRLLVDFPKGSVSNAQQPDLSKAVSLSMGLYMGETETKVMGNDLGFPQQGQISLSSGETDLKLLEESIANLNRSTSVPENPKSSASTAVSAAPTEKEFPKTHSDVSSEQQHLKGQTGTNGGNVKLYTTDQSTFDILQDLEFSSGSPGKETNESPWRSDLLIDENCLLSPLAGEDDSFLLEGNSNEDCKPLILPDTKPKIKDNGDLVLSSPSNVTLPQVKTEKEDFIELCTPGVIKQEKLGTVYCQASFPGANIIGNKMSAISVHGVSTSGGQMYHYDMNTASLSQQQDQKPIFNVIPPIPVGSENWNRCQGSGDDNLTSLGTLNFPGRTVFSNGYSSPSMRPDVSSPPSSSSTATTGPPPKLCLVCSDEASGCHYGVLTCGSCKVFFKRAVEGQHNYLCAGRNDCIIDKIRRKNCPACRYRKCLQAGMNLEARKTKKKIKGIQQATTGVSQETSENPGNKTIVPATLPQLTPTLVSLLEVIEPEVLYAGYDSSVPDSTWRIMTTLNMLGGRQVIAAVKWAKAIPGFRNLHLDDQMTLLQYSWMFLMAFALGWRSYRQSSANLLCFAPDLIINEQRMTLPCMYDQCKHMLYVSSELHRLQVSYEEYLCMKTLLLLSSVPKDGLKSQELFDEIRMTYIKELGKAIVKREGNSSQNWQRFYQLTKLLDSMHEVVENLLNYCFQTFLDKTMSIEFPEMLAEIITNQIPKYSNGNIKKLLFHQK
+General
+#coloring
+color skyblue, chain A
+color orange, chain B
+color purple, elem Zn
+color pink, chain F
+color green, chain C
+color green, chain D
+RMSD Analysis:
+◦ All-atoms, Backbone and RMSD Cα RMSD
+◦ Domain-specific comparisons (DBD vs LBD)
+#RMSD for all atoms
+cmd.align("polymer and name CA and (fold_7prw_with_zinc_cut_model_0)","polymer and name CA and (7prw)",quiet=0,object="aln_fold_7prw_with_zinc_cut_model_0_to_7prw",reset=1)
+
+#RMSD for carbon backbone
+cmd.align("polymer and name N+C+CA+O and (fold_7prw_with_zinc_cut_model_0)","polymer and name N+C+CA+O and (7prw)",quiet=0,object="aln_fold_7prw_with_zinc_cut_model_0_to_fold_7prw",reset=1)
+
+#RMSD Cα RMSD
+cmd.align("polymer and name CA and (fold_7prw_with_zinc_cut_model_0)","polymer and name CA and (7prw)",quiet=0,object="aln_fold_7prw_with_zinc_cut_model_0_to_fold_7prw",reset=1)
+
+# Domain-specific comparisons (DBD vs LBD): 
+fetch 7prw
+CmdLoad: "C:/Users/asima/OneDrive - nu.edu.kz/Рабочий стол/fold_7prw_with_zinc_cut/fold_7prw_with_zinc_cut_model_0.cif" loaded as "fold_7prw_with_zinc_cut_model_0".
+
+
+# Align the full structures first
+align fold_7prw_with_zinc_cut_model_0, 7prw
+#PRW
+# Define Domain Residue Ranges (Modify if Needed)
+# GRa DBD1
+create gra_dbd1_target, 7prw and chain A and resi 421-441
+create gra_dbd1_model, fold_7prw_with_zinc_cut_model_0 and chain A and resi 7-27
+
+
+# GRa DBD2
+create gra_dbd2_target, 7prw and chain A and resi 457-476
+create gra_dbd2_model, fold_7prw_with_zinc_cut_model_0 and chain A and resi 43-62
+
+
+# GRa LBD
+create gra_lbd_target, 7prw and chain A and resi 524-758
+create gra_lbd_model, fold_7prw_with_zinc_cut_model_0 and chain A and resi 75-307
+
+
+# GRb DBD1
+create grb_dbd1_target, 7prw and chain B and resi 421-441
+create grb_dbd1_model, fold_7prw_with_zinc_cut_model_0 and chain B and resi 4-24
+
+
+# GRb DBD2
+create grb_dbd2_target, 7prw and chain B and resi 457-476
+create grb_dbd2_model, fold_7prw_with_zinc_cut_model_0 and chain B and resi 40-59
+
+
+# GRb LBD
+create grb_lbd_target, 7prw and chain B and resi 524-758
+create grb_lbd_model, fold_7prw_with_zinc_cut_model_0 and chain B and resi 72-304
+
+
+
+
+# RMSD Calculations
+print("\n=== RMSD Analysis for DBD and LBD of GR homodimers ===\n")
+
+
+# GRa DBD1 RMSD
+rmsd_gra_dbd1 = cmd.align("gra_dbd1_model", "gra_dbd1_target")
+print(f"GR/A DBD1 RMSD: {rmsd_gra_dbd1[0]:.3f} A")
+
+
+# GRa DBD2 RMSD
+rmsd_gra_dbd2 = cmd.align("gra_dbd2_model", "gra_dbd2_target")
+print(f"GR/A DBD2 RMSD: {rmsd_gra_dbd2[0]:.3f} A")
+
+
+# GRa LBD RMSD
+rmsd_gra_lbd = cmd.align("gra_lbd_model", "gra_lbd_target")
+print(f"GR/A LBD RMSD: {rmsd_gra_lbd[0]:.3f} A")
+
+
+# GRb DBD1 RMSD
+rmsd_grb_dbd1 = cmd.align("grb_dbd1_model", "grb_dbd1_target")
+print(f"GR/B DBD1 RMSD: {rmsd_grb_dbd1[0]:.3f} A")
+
+
+# GRb DBD2 RMSD
+rmsd_grb_dbd2 = cmd.align("grb_dbd2_model", "grb_dbd2_target")
+print(f"GR/B DBD2 RMSD: {rmsd_grb_dbd2[0]:.3f} A")
+
+
+# GRb LBD RMSD
+rmsd_grb_lbd = cmd.align("grb_lbd_model", "grb_lbd_target")
+print(f"GR/B LBD RMSD: {rmsd_grb_lbd[0]:.3f} A")
+
+
+print("\n=== RMSD Analysis Completed Successfully! ===")
+2. Secondary Structure Analysis:
+◦ α-helical, β-sheet content, Loop regions
+◦ Domain-specific SSE distribution
+#Secondary Structure Analysis: 
+α-helical, β-sheet content, Loop regions 
+cmd.dss()  # Assign secondary structures
+
+
+alpha_residues = cmd.count_atoms("ss H and name CA")
+beta_residues = cmd.count_atoms("ss S and name CA")
+cmd.select("loop_residues", "name CA and (not ss H) and (not ss S)")
+loop_residues = cmd.count_atoms("loop_residues")  # Select residues
+
+
+total_residues = cmd.count_atoms("name CA")  # Make sure all residues are counted
+
+
+alpha_fraction = (alpha_residues / total_residues) * 100
+beta_fraction = (beta_residues / total_residues) * 100
+loop_fraction = (loop_residues / total_residues) * 100  # Now correctly calculated
+
+
+print(f"Alpha-helical content: {alpha_fraction:.2f}%")
+print(f"Beta-sheet content: {beta_fraction:.2f}%")
+print(f"Loop/coil content: {loop_fraction:.2f}%")
+print(f"Total: {alpha_fraction + beta_fraction + loop_fraction:.2f}%")  # Should be ~100%
+
+
+
+
+
+
+#Domain-specific SSE distribution 
+# Recalculate secondary structure assignments
+cmd.dss()
+# GRa DBD (DNA-binding domain)
+cmd.select("gra_dbd", "chain A and resi 418-488")
+gra_dbd_alpha = cmd.count_atoms("gra_dbd and ss H and name CA")
+gra_dbd_beta = cmd.count_atoms("gra_dbd and ss S and name CA")
+gra_dbd_loop = cmd.count_atoms("gra_dbd and (not ss H) and (not ss S) and name CA")
+gra_dbd_total = cmd.count_atoms("gra_dbd and name CA")
+
+
+print(f"GRa DBD Alpha: {gra_dbd_alpha/gra_dbd_total*100:.2f}%")
+print(f"GRa DBD Beta: {gra_dbd_beta/gra_dbd_total*100:.2f}%")
+print(f"GRa DBD Loop: {gra_dbd_loop/gra_dbd_total*100:.2f}%")
+
+
+# GRa LBD (Ligand-binding domain)
+cmd.select("gra_lbd", "chain A and resi 528-758")
+gra_lbd_alpha = cmd.count_atoms("gra_lbd and ss H and name CA")
+gra_lbd_beta = cmd.count_atoms("gra_lbd and ss S and name CA")
+gra_lbd_loop = cmd.count_atoms("gra_lbd and (not ss H) and (not ss S) and name CA")
+gra_lbd_total = cmd.count_atoms("gra_lbd and name CA")
+
+
+print(f"GRa LBD Alpha: {gra_lbd_alpha/gra_lbd_total*100:.2f}%")
+print(f"GRa LBD Beta: {gra_lbd_beta/gra_lbd_total*100:.2f}%")
+print(f"GRa LBD Loop: {gra_lbd_loop/gra_lbd_total*100:.2f}%")
+
+
+
+
+# Recalculate secondary structure assignments
+cmd.dss()
+
+
+# GRb DBD (DNA-binding domain)
+cmd.select("grb_dbd", "chain B and resi 418-488")
+grb_dbd_alpha = cmd.count_atoms("grb_dbd and ss H and name CA")
+grb_dbd_beta = cmd.count_atoms("grb_dbd and ss S and name CA")
+grb_dbd_loop = cmd.count_atoms("grb_dbd and (not ss H) and (not ss S) and name CA")
+grb_dbd_total = cmd.count_atoms("grb_dbd and name CA")
+
+
+print(f"GRb DBD Alpha: {grb_dbd_alpha/grb_dbd_total*100:.2f}%")
+print(f"GRb DBD Beta: {grb_dbd_beta/grb_dbd_total*100:.2f}%")
+print(f"GRb DBD Loop: {grb_dbd_loop/grb_dbd_total*100:.2f}%")
+
+
+# GRb LBD (Ligand-binding domain)
+cmd.select("grb_lbd", "chain B and resi 528-758")
+grb_lbd_alpha = cmd.count_atoms("grb_lbd and ss H and name CA")
+grb_lbd_beta = cmd.count_atoms("grb_lbd and ss S and name CA")
+grb_lbd_loop = cmd.count_atoms("grb_lbd and (not ss H) and (not ss S) and name CA")
+grb_lbd_total = cmd.count_atoms("grb_lbd and name CA")
+
+
+
+
+print(f"GRb LBD Alpha: {grb_lbd_alpha/grb_lbd_total*100:.2f}%")
+print(f"GRb LBD Beta: {grb_lbd_beta/grb_lbd_total*100:.2f}%")
+print(f"GRb LBD Loop: {grb_lbd_loop/grb_lbd_total*100:.2f}%")
+
+
+
+
+3. Domain Architecture Analysis:
+◦ Distance between DBD and LBD (εDBD, LBD)
+◦ Angles between domains (θDBD, LBD)
+◦ Dihedral angles (DHDBD, LBD)
+# Define pseudoatoms for the center of mass (COM) of each domain in chains A and B
+pseudoatom DBD_COM_A, selection=7prw and chain A and resi 418-488
+pseudoatom LBD_COM_A, selection=7prw and chain A and resi 528-758
+
+
+pseudoatom DBD_COM_B, selection=7prw and chain B and resi 418-488
+pseudoatom LBD_COM_B, selection=7prw and chain B and resi 528-758
+
+
+# Define two additional pseudoatoms for angle measurement
+pseudoatom Hinge_COM_A, selection=7PRW and resi 488+528 and chain A
+pseudoatom Hinge_COM_B, selection=7PRW and resi 488+528 and chain B
+
+
+#Select the last atom for DBD and first atom for LBD for both chains
+select DBD_last_A, 7PRW and chain A and resi 488 and name CA
+select LBD_first_A, 7PRW and chain A and resi 528 and name CA
+select DBD_last_B, 7PRW and chain B and resi 488 and name CA
+select LBD_first_B, 7PRW and chain B and resi 528 and name CA
+
+
+# Measure distances between DBD and LBD COMs in chains A and B
+distance DBD_LBD_Dist_A, DBD_COM_A, LBD_COM_A
+distance DBD_LBD_Dist_B, DBD_COM_B, LBD_COM_B
+
+
+# Measure angle between LBD and DBD in chain A and B
+get_angle DBD_COM_A, Hinge_COM_A, LBD_COM_A
+get_angle DBD_COM_B, Hinge_COM_B, LBD_COM_B
+
+
+# Measure dihedral angles between LBD and DBD in chains A and B
+get_dihedral DBD_COM_A, DBD_last_A, LBD_first_A, LBD_COM_A
+get_dihedral DBD_COM_B, DBD_last_B, LBD_first_B, LBD_COM_B
+
+4. Ligand-Binding Pocket Analysis: 
+◦ Volume calculations:
+
+
+◦ Surface area measurements:
+
+
+◦ Pocket sphericity:
+
+
+◦ Effective radius:
+
+5. Structure Validation: 
+◦ pLDDT score analysis:
+
+
+◦ Ramachandran plot analysis:
+
+
+◦ B-factor correlation:
+
+
+◦ RSCC comparison:
+
+
+
+Git commit
+GIT COMMIT
+
+
+git --version
+git config --global user.name "assimvv"
+git config --global user.email "assima.serikbay@nu.edu.kz"
+git clone 
+cd C:\Users\asima\nuclear_receptor_analysis
+git pull origin main
+Move-Item "C:\Users\asima\7prw\analyzed_model0.pse" "C:\Users\asima\nuclear_receptor_analysis\"
+cd C:\Users\asima\nuclear_receptor_analysis
+git status
+git add analyzed_model0.pse
+git add .
+git commit -m "Added analyzed_model0.pse for nuclear receptor analysis"
+git push origin main
+
+
+
+
+
+
+
+# код с резами кода
+PS C:\Users\asima> git --version
+git version 2.45.1.windows.1
+PS C:\Users\asima> git config --global user.name "assimvv"
+PS C:\Users\asima> git config --global user.email "assima.serikbay@nu.edu.kz"
+PS C:\Users\asima> git clone https://github.com/assimvv/nuclear_receptor_analysis.git
+fatal: destination path 'nuclear_receptor_analysis' already exists and is not an empty directory.
+PS C:\Users\asima> cd C:\Users\asima\nuclear_receptor_analysis
+PS C:\Users\asima\nuclear_receptor_analysis> git pull origin main
+From https://github.com/assimvv/nuclear_receptor_analysis
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+PS C:\Users\asima\nuclear_receptor_analysis>
+PS C:\Users\asima\nuclear_receptor_analysis>
+
+
+PS C:\Users\asima\nuclear_receptor_analysis> Move-Item "C:\Users\asima\7prw\analyzed_model0.pse" "C:\Users\asima\nuclear_receptor_analysis\"
+PS C:\Users\asima\nuclear_receptor_analysis> cd C:\Users\asima\nuclear_receptor_analysis
+PS C:\Users\asima\nuclear_receptor_analysis> git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        analyzed_model0.pse
+
+
+nothing added to commit but untracked files present (use "git add" to track)
+PS C:\Users\asima\nuclear_receptor_analysis> git add analyzed_model0.pse
+PS C:\Users\asima\nuclear_receptor_analysis> git add .
+PS C:\Users\asima\nuclear_receptor_analysis> git commit -m "Added analyzed_model0.pse for nuclear receptor analysis"
+[main ed39460] Added analyzed_model0.pse for nuclear receptor analysis
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 analyzed_model0.pse
+PS C:\Users\asima\nuclear_receptor_analysis> git push origin main
+Enumerating objects: 4, done.
+Counting objects: 100% (4/4), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 1.42 MiB | 618.00 KiB/s, done.
+Total 3 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
+To https://github.com/assimvv/nuclear_receptor_analysis.git
+   bcd4772..ed39460  main -> main
+PS C:\Users\asima\nuclear_receptor_analysis>
+
+
+
